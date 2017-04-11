@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.viskan</groupId>
+        <artifactId>parent</artifactId>
+        <version>5</version>
+    </parent>
+    <groupId>com.anton-johansson</groupId>
+    <artifactId>ip-to-geolocation-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>Anton Johansson :: IP to Geo-Location Service</name>
+    <description>A service that takes data containing IP addresses from a given source and updates the geo-location using a given provider.</description>
+
+    <properties>
+        <!-- Build -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+</project>
