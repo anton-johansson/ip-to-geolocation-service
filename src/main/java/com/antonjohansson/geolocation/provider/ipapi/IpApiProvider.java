@@ -27,6 +27,18 @@ import com.antonjohansson.geolocation.framework.domain.LookupResult;
  */
 public class IpApiProvider implements Provider
 {
+    private String token = "";
+
+    public String getToken()
+    {
+        return token;
+    }
+
+    public void setToken(String token)
+    {
+        this.token = token;
+    }
+
     @Override
     public List<LookupResult> lookup(List<String> addresses)
     {

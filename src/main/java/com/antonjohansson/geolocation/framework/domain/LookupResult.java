@@ -15,7 +15,13 @@
  */
 package com.antonjohansson.geolocation.framework.domain;
 
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+
 import java.math.BigDecimal;
+import java.util.Objects;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 /**
  * Defines a lookup result.
@@ -54,5 +60,37 @@ public class LookupResult
     public void setLatitude(BigDecimal latitude)
     {
         this.latitude = latitude;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(ip);
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj == null || obj.getClass() != getClass())
+        {
+            return false;
+        }
+        if (obj == this)
+        {
+            return true;
+        }
+
+        LookupResult that = (LookupResult) obj;
+        return new EqualsBuilder()
+                .append(this.ip, that.ip)
+                .append(this.longitude, that.longitude)
+                .append(this.latitude, that.latitude)
+                .isEquals();
+    }
+
+    @Override
+    public String toString()
+    {
+        return reflectionToString(this, SHORT_PREFIX_STYLE);
     }
 }

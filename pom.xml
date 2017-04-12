@@ -35,6 +35,10 @@
         <!-- Build -->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
+        <!-- Dependencies -->
+        <commons-beanutils.version>1.9.3</commons-beanutils.version>
+        <commons-lang3.version>3.5</commons-lang3.version>
     </properties>
 
     <organization />
@@ -66,6 +70,19 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>${commons-beanutils.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <pluginManagement>

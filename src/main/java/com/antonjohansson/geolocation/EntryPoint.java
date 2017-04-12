@@ -15,6 +15,10 @@
  */
 package com.antonjohansson.geolocation;
 
+import com.antonjohansson.geolocation.config.Configuration;
+import com.antonjohansson.geolocation.framework.Provider;
+import com.antonjohansson.geolocation.framework.Source;
+
 /**
  * Contains the main entry-point of the application.
  */
@@ -25,5 +29,19 @@ public class EntryPoint
      */
     public static void main(String[] args)
     {
+        if (args.length < 1)
+        {
+            throw new RuntimeException("Must contain an argument for the configuration file");
+        }
+
+        String configurationFile = args[0];
+        Configuration configuration = new Configuration(configurationFile);
+        configuration.load();
+
+        Provider provider = configuration.getProvider();
+        Source<?> source = configuration.getSource();
+
+        System.out.println(provider);
+        System.out.println(source);
     }
 }
