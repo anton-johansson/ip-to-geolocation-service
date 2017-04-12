@@ -29,12 +29,43 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>Anton Johansson :: IP to Geo-Location Service</name>
     <description>A service that takes data containing IP addresses from a given source and updates the geo-location using a given provider.</description>
+    <url>https://github.com/anton-johansson/ip-to-geolocation-service</url>
 
     <properties>
         <!-- Build -->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+
+    <organization />
+
+    <developers>
+        <developer>
+            <id>anton-johansson</id>
+            <name>Anton Johansson</name>
+            <email>antoon.johansson@gmail.com</email>
+        </developer>
+    </developers>
+
+    <issueManagement>
+        <url>https://github.com/anton-johansson/ip-to-geolocation-service/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+    <scm>
+        <url>https://github.com/anton-johansson/ip-to-geolocation-service</url>
+        <connection>scm:git:git://github.com/anton-johansson/ip-to-geolocation-service.git</connection>
+        <developerConnection>scm:git:git@github.com:anton-johansson/ip-to-geolocation-service.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <build>
         <pluginManagement>
