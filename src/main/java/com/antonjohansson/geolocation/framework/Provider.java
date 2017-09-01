@@ -15,6 +15,7 @@
  */
 package com.antonjohansson.geolocation.framework;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.antonjohansson.geolocation.framework.domain.LookupResult;
@@ -30,5 +31,5 @@ public interface Provider
      * @param addresses The list of addresses to look up.
      * @return Returns the lookup results.
      */
-    List<LookupResult> lookup(List<String> addresses);
+    List<LookupResult> lookup(Collection<String> addresses);
 }

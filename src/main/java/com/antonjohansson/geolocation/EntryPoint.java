@@ -15,9 +15,16 @@
  */
 package com.antonjohansson.geolocation;
 
+import static java.util.stream.Collectors.groupingBy;
+
+import java.util.List;
+import java.util.Map;
+
 import com.antonjohansson.geolocation.config.Configuration;
 import com.antonjohansson.geolocation.framework.Provider;
 import com.antonjohansson.geolocation.framework.Source;
+import com.antonjohansson.geolocation.framework.domain.LookupResult;
+import com.antonjohansson.geolocation.framework.domain.SourceData;
 
 /**
  * Contains the main entry-point of the application.
@@ -39,9 +46,33 @@ public class EntryPoint
         configuration.load();
 
         Provider provider = configuration.getProvider();
-        Source<?> source = configuration.getSource();
+        Source<? extends SourceData> source = configuration.getSource();
 
-        System.out.println(provider);
-        System.out.println(source);
+        handle(configuration, provider, source);
+    }
+
+    private static <T extends SourceData> void handle(Configuration configuration, Provider provider, Source<T> source)
+    {
+        List<T> items = source.getData(configuration.getBatchSize());
+        if (items.size() > configuration.getBatchSize())
+        {
+            throw new RuntimeException("Source returned more data than expected");
+        }
+        if (items.isEmpty())
+        {
+            System.out.println("There is nothing to provide coordinates for, exiting...");
+            return;
+        }
+
+        Map<String, List<T>> map = items.stream().collect(groupingBy(SourceData::getAddress));
+        List<LookupResult> results = provider.lookup(map.keySet());
+        for (LookupResult result : results)
+        {
+            String ip = result.getIp();
+            for (T item : map.get(ip))
+            {
+                source.update(item, result.getLongitude(), result.getLatitude());
+            }
+        }
     }
 }

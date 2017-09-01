@@ -17,6 +17,7 @@ package com.antonjohansson.geolocation.provider.ipapi;
 
 import static java.util.Collections.emptyList;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.antonjohansson.geolocation.framework.Provider;
@@ -40,7 +41,7 @@ public class IpApiProvider implements Provider
     }
 
     @Override
-    public List<LookupResult> lookup(List<String> addresses)
+    public List<LookupResult> lookup(Collection<String> addresses)
     {
         return emptyList();
     }

@@ -29,6 +29,7 @@ import java.util.Properties;
 
 import com.antonjohansson.geolocation.framework.Provider;
 import com.antonjohansson.geolocation.framework.Source;
+import com.antonjohansson.geolocation.framework.domain.SourceData;
 
 /**
  * Holds the configuration of the application.
@@ -37,7 +38,8 @@ public class Configuration
 {
     private final String configurationFile;
     private Provider provider;
-    private Source<?> source;
+    private Source<? extends SourceData> source;
+    private int batchSize;
 
     public Configuration(String configurationFile)
     {
@@ -47,11 +49,13 @@ public class Configuration
     /**
      * Loads the configuration from the file.
      */
+    @SuppressWarnings("unchecked")
     public void load()
     {
         Properties properties = getProperties(configurationFile);
         this.provider = getInstance(properties, Provider.class);
         this.source = getInstance(properties, Source.class);
+        this.batchSize = Integer.parseInt(properties.getProperty("batchSize", "10"));
     }
 
     private <T> T getInstance(Properties properties, Class<T> target)
@@ -144,8 +148,16 @@ public class Configuration
     /**
      * Gets the source to use.
      */
-    public Source<?> getSource()
+    public Source<? extends SourceData> getSource()
     {
         return source;
+    }
+
+    /**
+     * The size of the batches to handle.
+     */
+    public int getBatchSize()
+    {
+        return batchSize;
     }
 }
