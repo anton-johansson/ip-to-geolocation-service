@@ -22,9 +22,37 @@ import com.antonjohansson.geolocation.framework.domain.SourceData;
  */
 class Document implements SourceData
 {
+    private final String address;
+    private final String index;
+    private final String type;
+    private final String identifier;
+
+    Document(String address, String index, String type, String identifier)
+    {
+        this.address = address;
+        this.index = index;
+        this.type = type;
+        this.identifier = identifier;
+    }
+
     @Override
     public String getAddress()
     {
-        return "";
+        return address;
+    }
+
+    public String getIndex()
+    {
+        return index;
+    }
+
+    public String getType()
+    {
+        return type;
+    }
+
+    public String getIdentifier()
+    {
+        return identifier;
     }
 }
