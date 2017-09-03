@@ -6,5 +6,9 @@ cache:
   directories:
     - $HOME/.m2
 
-before_deploy:
-  - mvn package
+script:
+  - mvn package -DskipTests
+  - mvn cobertura:cobertura
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
