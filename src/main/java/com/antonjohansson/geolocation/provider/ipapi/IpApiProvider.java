@@ -17,10 +17,14 @@ package com.antonjohansson.geolocation.provider.ipapi;
 
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.cxf.jaxrs.client.WebClient;
 
 import com.antonjohansson.geolocation.config.Configuration;
@@ -86,5 +90,36 @@ public class IpApiProvider implements Provider
         result.setLongitude(response.getLongitude());
         result.setLatitude(response.getLatitude());
         return result;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(endpoint, key);
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj == null || obj.getClass() != getClass())
+        {
+            return false;
+        }
+        if (obj == this)
+        {
+            return true;
+        }
+
+        IpApiProvider that = (IpApiProvider) obj;
+        return new EqualsBuilder()
+                .append(this.endpoint, that.endpoint)
+                .append(this.key, that.key)
+                .isEquals();
+    }
+
+    @Override
+    public String toString()
+    {
+        return reflectionToString(this, SHORT_PREFIX_STYLE);
     }
 }

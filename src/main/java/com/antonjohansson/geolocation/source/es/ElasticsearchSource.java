@@ -17,11 +17,16 @@ package com.antonjohansson.geolocation.source.es;
 
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.antonjohansson.geolocation.framework.Source;
 import com.antonjohansson.geolocation.http.WebClientFactory;
@@ -111,5 +116,38 @@ public class ElasticsearchSource implements Source<Document>
                 .build()
                 .path("/{index}/{type}/{identifier}/_update", data.getIndex(), data.getType(), data.getIdentifier())
                 .post(request);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(endpoint, index, type);
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj == null || obj.getClass() != getClass())
+        {
+            return false;
+        }
+        if (obj == this)
+        {
+            return true;
+        }
+
+        ElasticsearchSource that = (ElasticsearchSource) obj;
+        return new EqualsBuilder()
+                .append(this.endpoint, that.endpoint)
+                .append(this.index, that.index)
+                .append(this.type, that.type)
+                .append(this.addressFieldName, that.addressFieldName)
+                .isEquals();
+    }
+
+    @Override
+    public String toString()
+    {
+        return reflectionToString(this, SHORT_PREFIX_STYLE);
     }
 }
