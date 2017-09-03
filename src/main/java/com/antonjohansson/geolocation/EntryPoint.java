@@ -31,6 +31,27 @@ import com.antonjohansson.geolocation.framework.domain.SourceData;
  */
 public class EntryPoint
 {
+    private final Configuration configuration;
+
+    public EntryPoint(String configurationFile)
+    {
+        configuration = new Configuration(configurationFile);
+    }
+
+    /**
+     * Runs the application.
+     */
+    public void run()
+    {
+        configuration.load();
+
+        Provider provider = configuration.getProvider();
+        Source<? extends SourceData> source = configuration.getSource();
+
+        provider.validate(configuration);
+        handle(provider, source);
+    }
+
     /**
      * The main entry-point of the application.
      */
@@ -42,17 +63,11 @@ public class EntryPoint
         }
 
         String configurationFile = args[0];
-        Configuration configuration = new Configuration(configurationFile);
-        configuration.load();
-
-        Provider provider = configuration.getProvider();
-        Source<? extends SourceData> source = configuration.getSource();
-
-        provider.validate(configuration);
-        handle(configuration, provider, source);
+        EntryPoint entryPoint = new EntryPoint(configurationFile);
+        entryPoint.run();
     }
 
-    private static <T extends SourceData> void handle(Configuration configuration, Provider provider, Source<T> source)
+    private <T extends SourceData> void handle(Provider provider, Source<T> source)
     {
         List<T> items = source.getData(configuration.getBatchSize());
         if (items.size() > configuration.getBatchSize())
