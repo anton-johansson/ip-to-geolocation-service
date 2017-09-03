@@ -25,6 +25,8 @@ import java.util.Map;
 
 import com.antonjohansson.geolocation.framework.Source;
 import com.antonjohansson.geolocation.http.WebClientFactory;
+import com.antonjohansson.geolocation.source.es.UpdateDocumentRequest.UpdateDocument;
+import com.antonjohansson.geolocation.source.es.UpdateDocumentRequest.UpdateDocumentLocation;
 import com.antonjohansson.geolocation.source.es.model.SearchHit;
 import com.antonjohansson.geolocation.source.es.model.SearchResponse;
 
@@ -94,6 +96,20 @@ public class ElasticsearchSource implements Source<Document>
     @Override
     public void update(Document data, BigDecimal longitude, BigDecimal latitude)
     {
-        System.out.println("Updating document '" + data.getIdentifier() + "': " + longitude + ", " + latitude);
+        UpdateDocumentLocation location = new UpdateDocumentLocation();
+        location.setLongitude(longitude);
+        location.setLatitude(latitude);
+
+        UpdateDocument document = new UpdateDocument();
+        document.setLocation(location);
+
+        UpdateDocumentRequest request = new UpdateDocumentRequest();
+        request.setDocument(document);
+
+        WebClientFactory.endpoint(endpoint)
+                .json()
+                .build()
+                .path("/{index}/{type}/{identifier}/_update", data.getIndex(), data.getType(), data.getIdentifier())
+                .post(request);
     }
 }
