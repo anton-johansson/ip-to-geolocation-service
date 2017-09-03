@@ -16,9 +16,12 @@
 package com.antonjohansson.geolocation.provider.ipapi;
 
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.cxf.jaxrs.client.WebClient;
 
 import com.antonjohansson.geolocation.config.Configuration;
 import com.antonjohansson.geolocation.framework.Provider;
@@ -34,16 +37,16 @@ public class IpApiProvider implements Provider
 {
     private static final int MAX_BATCH_SIZE = 100;
     private String endpoint = "http://ip-api.com";
-    private String token = "";
+    private String key = "";
 
     public void setEndpoint(String endpoint)
     {
         this.endpoint = endpoint;
     }
 
-    public void setToken(String token)
+    public void setKey(String key)
     {
-        this.token = token;
+        this.key = key;
     }
 
     @Override
@@ -62,12 +65,17 @@ public class IpApiProvider implements Provider
                 .map(LookupRequest::new)
                 .collect(toList());
 
-        Collection<? extends LookupResponse> responses = WebClientFactory.endpoint(endpoint)
+        WebClient client = WebClientFactory.endpoint(endpoint)
                 .json()
                 .build()
-                .path("/batch")
-                .postAndGetCollection(requests, LookupResponse.class);
+                .path("/batch");
 
+        if (!isBlank(key))
+        {
+            client.query("key", key);
+        }
+
+        Collection<? extends LookupResponse> responses = client.postAndGetCollection(requests, LookupResponse.class);
         return responses.stream().map(this::toResult).collect(toList());
     }
 
