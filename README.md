@@ -1,5 +1,8 @@
 # IP to Geo-Location service
 
+[![Build Status](https://img.shields.io/travis/anton-johansson/ip-to-geolocation-service/master.svg)](https://travis-ci.org/anton-johansson/ip-to-geolocation-service)
+[![License](https://img.shields.io/hexpm/l/plug.svg?maxAge=2592000)](https://raw.githubusercontent.com/anton-johansson/ip-to-geolocation-service/master/LICENSE)
+
 A service that takes data containing IP addresses from a given source and updates the geo-location using a given provider.
 
 
