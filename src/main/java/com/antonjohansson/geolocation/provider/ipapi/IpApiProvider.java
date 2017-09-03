@@ -33,7 +33,13 @@ import com.antonjohansson.geolocation.provider.ipapi.model.LookupResponse;
 public class IpApiProvider implements Provider
 {
     private static final int MAX_BATCH_SIZE = 100;
+    private String endpoint = "http://ip-api.com";
     private String token = "";
+
+    public void setEndpoint(String endpoint)
+    {
+        this.endpoint = endpoint;
+    }
 
     public void setToken(String token)
     {
@@ -56,7 +62,7 @@ public class IpApiProvider implements Provider
                 .map(LookupRequest::new)
                 .collect(toList());
 
-        Collection<? extends LookupResponse> responses = WebClientFactory.endpoint("http://ip-api.com")
+        Collection<? extends LookupResponse> responses = WebClientFactory.endpoint(endpoint)
                 .json()
                 .build()
                 .path("/batch")
