@@ -10,7 +10,12 @@ The following sample uses an Elasticsearch source and the IP-API provider.
 ```
 provider = com.antonjohansson.geolocation.provider.ipapi.IpApiProvider
 provider.token = abc123
-source = com.antonjohansson.geolocation.source.es.ElasticsearchSourc
+
+source = com.antonjohansson.geolocation.source.es.ElasticsearchSource
+source.endpoint = http://my-elasticsearch-cluster:9200
+source.index = *
+source.type = customer
+source.addressFieldName = remoteAddress
 ```
 
 
