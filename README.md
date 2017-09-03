@@ -6,6 +6,15 @@
 A service that takes data containing IP addresses from a given source and updates the geo-location using a given provider.
 
 
+## Sources and providers
+
+Sources:
+ * [Elasticsearch](https://www.elastic.co/products/elasticsearch)
+
+Providers:
+ * [IP API](http://ip-api.com)
+
+
 ## Sample configuration
 
 The following sample uses an Elasticsearch source and the IP-API provider.
