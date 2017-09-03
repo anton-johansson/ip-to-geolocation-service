@@ -18,6 +18,7 @@ package com.antonjohansson.geolocation.framework;
 import java.util.Collection;
 import java.util.List;
 
+import com.antonjohansson.geolocation.config.Configuration;
 import com.antonjohansson.geolocation.framework.domain.LookupResult;
 
 /**
@@ -25,6 +26,15 @@ import com.antonjohansson.geolocation.framework.domain.LookupResult;
  */
 public interface Provider
 {
+    /**
+     * Validates the configuration for this provider.
+     *
+     * @param configuration The configuration to validate.
+     */
+    default void validate(Configuration configuration)
+    {
+    }
+
     /**
      * Performs a lookup for a given set of addresses.
      *

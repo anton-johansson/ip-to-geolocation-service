@@ -48,6 +48,7 @@ public class EntryPoint
         Provider provider = configuration.getProvider();
         Source<? extends SourceData> source = configuration.getSource();
 
+        provider.validate(configuration);
         handle(configuration, provider, source);
     }
 

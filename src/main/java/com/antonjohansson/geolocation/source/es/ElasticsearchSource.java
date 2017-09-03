@@ -15,42 +15,24 @@
  */
 package com.antonjohansson.geolocation.source.es;
 
-import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.cxf.jaxrs.client.WebClient;
-
 import com.antonjohansson.geolocation.framework.Source;
+import com.antonjohansson.geolocation.http.WebClientFactory;
 import com.antonjohansson.geolocation.source.es.model.SearchHit;
 import com.antonjohansson.geolocation.source.es.model.SearchResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 /**
  * {@link Source} implementation that works against an Elasticsearch type.
  */
 public class ElasticsearchSource implements Source<Document>
 {
-    private static final List<?> PROVIDERS = asList(provider());
-
-    private static JacksonJaxbJsonProvider provider()
-    {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        JacksonJaxbJsonProvider provider = new JacksonJaxbJsonProvider();
-        provider.setMapper(mapper);
-        return provider;
-    }
-
     private String endpoint = "";
     private String index = "";
     private String type = "";
@@ -85,9 +67,9 @@ public class ElasticsearchSource implements Source<Document>
         Map<String, Object> body = new HashMap<>();
         body.put("query", query);
 
-        SearchResponse response = WebClient.create(endpoint, PROVIDERS)
-                .accept(APPLICATION_JSON_TYPE)
-                .type(APPLICATION_JSON_TYPE)
+        SearchResponse response = WebClientFactory.endpoint(endpoint)
+                .json()
+                .build()
                 .path("/{index}/{type}/_search", index, type)
                 .query("size", batchSize)
                 .post(body, SearchResponse.class);
@@ -112,5 +94,6 @@ public class ElasticsearchSource implements Source<Document>
     @Override
     public void update(Document data, BigDecimal longitude, BigDecimal latitude)
     {
+        System.out.println("Updating document '" + data.getIdentifier() + "': " + longitude + ", " + latitude);
     }
 }
