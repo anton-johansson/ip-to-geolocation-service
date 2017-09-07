@@ -21,37 +21,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Defines a request to update a document.
+ *
+ * @param <T> The type of the document.
  */
-public class UpdateDocumentRequest
+public class UpdateDocumentRequest<T>
 {
-    private @JsonProperty("doc") UpdateDocument document = new UpdateDocument();
+    private @JsonProperty("doc") T document;
 
-    public UpdateDocument getDocument()
+    public T getDocument()
     {
         return document;
     }
 
-    public void setDocument(UpdateDocument document)
+    public void setDocument(T document)
     {
         this.document = document;
-    }
-
-    /**
-     * The document to update.
-     */
-    public static class UpdateDocument
-    {
-        private @JsonProperty("location") UpdateDocumentLocation location = new UpdateDocumentLocation();
-
-        public UpdateDocumentLocation getLocation()
-        {
-            return location;
-        }
-
-        public void setLocation(UpdateDocumentLocation location)
-        {
-            this.location = location;
-        }
     }
 
     /**

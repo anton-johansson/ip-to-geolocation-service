@@ -15,7 +15,7 @@
  */
 package com.antonjohansson.geolocation.source.es;
 
-import static java.util.Collections.emptyMap;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
@@ -26,11 +26,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.antonjohansson.geolocation.framework.Source;
 import com.antonjohansson.geolocation.http.WebClientFactory;
-import com.antonjohansson.geolocation.source.es.UpdateDocumentRequest.UpdateDocument;
 import com.antonjohansson.geolocation.source.es.UpdateDocumentRequest.UpdateDocumentLocation;
 import com.antonjohansson.geolocation.source.es.model.SearchHit;
 import com.antonjohansson.geolocation.source.es.model.SearchResponse;
@@ -44,6 +45,7 @@ public class ElasticsearchSource implements Source<Document>
     private String index = "";
     private String type = "";
     private String addressFieldName = "";
+    private String coordinatesFieldName = "";
 
     public void setEndpoint(String endpoint)
     {
@@ -65,14 +67,38 @@ public class ElasticsearchSource implements Source<Document>
         this.addressFieldName = addressFieldName;
     }
 
+    public void setCoordinatesFieldName(String coordinatesFieldName)
+    {
+        this.coordinatesFieldName = coordinatesFieldName;
+    }
+
     @Override
     public List<Document> getData(int batchSize)
     {
-        Map<String, Object> query = new HashMap<>();
-        query.put("match_all", emptyMap());
+        Map<String, Object> exists = new HashMap<>();
+        exists.put("field", addressFieldName);
+
+        Map<String, Object> notExists = new HashMap<>();
+        notExists.put("field", coordinatesFieldName);
+
+        Map<String, Object> must = new HashMap<>();
+        must.put("exists", exists);
+
+        Map<String, Object> mustNot = new HashMap<>();
+        mustNot.put("exists", notExists);
+
+        List<Map<String, Object>> musts = asList(must);
+        List<Map<String, Object>> mustNots = asList(mustNot);
+
+        Map<String, Object> bool = new HashMap<>();
+        bool.put("must", musts);
+        bool.put("must_not", mustNots);
+
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("bool", bool);
 
         Map<String, Object> body = new HashMap<>();
-        body.put("query", query);
+        body.put("filter", filter);
 
         SearchResponse response = WebClientFactory.endpoint(endpoint)
                 .json()
@@ -105,17 +131,19 @@ public class ElasticsearchSource implements Source<Document>
         location.setLongitude(longitude);
         location.setLatitude(latitude);
 
-        UpdateDocument document = new UpdateDocument();
-        document.setLocation(location);
+        Map<String, Object> document = new HashMap<>();
+        document.put(coordinatesFieldName, location);
 
-        UpdateDocumentRequest request = new UpdateDocumentRequest();
+        UpdateDocumentRequest<Map<String, Object>> request = new UpdateDocumentRequest<>();
         request.setDocument(document);
 
-        WebClientFactory.endpoint(endpoint)
+        Response response = WebClientFactory.endpoint(endpoint)
                 .json()
                 .build()
                 .path("/{index}/{type}/{identifier}/_update", data.getIndex(), data.getType(), data.getIdentifier())
                 .post(request);
+
+        System.out.println(response.readEntity(String.class));
     }
 
     @Override
