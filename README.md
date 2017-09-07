@@ -29,6 +29,7 @@ source.endpoint = http://my-elasticsearch-cluster:9200
 source.index = *
 source.type = customer
 source.addressFieldName = remoteAddress
+source.coordinatesFieldName = coordinates
 ```
 
 
